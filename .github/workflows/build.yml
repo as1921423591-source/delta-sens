@@ -20,10 +20,10 @@ jobs:
       - name: List files
         run: ls -la
 
-      - name: Build
+            - name: Build
         run: |
           PROJECT=$(ls -d *.xcodeproj | head -1)
-          SCHEME=$(xcodebuild -project "$PROJECT" -list 2>/dev/null | grep -A20 "Schemes:" | tail -n +2 | head -1 | xargs)
+          SCHEME="${PROJECT%.xcodeproj}"
           echo "Project: $PROJECT, Scheme: $SCHEME"
           xcodebuild \
             -project "$PROJECT" \
