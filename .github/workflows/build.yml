@@ -17,23 +17,11 @@ jobs:
       - name: Generate Xcode project
         run: xcodegen
 
-      - name: List files
-        run: ls -la
-
-            - name: Build
+      - name: Build
         run: |
           PROJECT=$(ls -d *.xcodeproj | head -1)
           SCHEME="${PROJECT%.xcodeproj}"
-          echo "Project: $PROJECT, Scheme: $SCHEME"
-          xcodebuild \
-            -project "$PROJECT" \
-            -scheme "$SCHEME" \
-            -configuration Release \
-            -sdk iphoneos \
-            -derivedDataPath build \
-            CODE_SIGNING_ALLOWED=NO \
-            CODE_SIGNING_REQUIRED=NO \
-            build
+          xcodebuild -project "$PROJECT" -scheme "$SCHEME" -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
 
       - name: Package IPA
         run: |
