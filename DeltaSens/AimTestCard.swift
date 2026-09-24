@@ -115,3 +115,19 @@ struct AimTestFull: View {
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { onDone() }
     }
 }
+
+struct Crosshair: View {
+    let color: Color
+    var body: some View {
+        ZStack {
+            Path { p in
+                p.move(to: CGPoint(x: -10, y: 0)); p.addLine(to: CGPoint(x: -4, y: 0))
+                p.move(to: CGPoint(x: 4, y: 0)); p.addLine(to: CGPoint(x: 10, y: 0))
+                p.move(to: CGPoint(x: 0, y: -10)); p.addLine(to: CGPoint(x: 0, y: -4))
+                p.move(to: CGPoint(x: 0, y: 4)); p.addLine(to: CGPoint(x: 0, y: 10))
+            }.stroke(color, lineWidth: 2)
+            Circle().fill(color).frame(width: 3, height: 3)
+        }
+        .frame(width: 20, height: 20)
+    }
+}
