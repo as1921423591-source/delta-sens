@@ -16,6 +16,9 @@ jobs:
 
       - name: Generate Xcode project
         run: xcodegen
+        
+      - name: List files
+        run: ls -la
 
       - name: Build
         run: |
