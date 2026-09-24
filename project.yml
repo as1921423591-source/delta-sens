@@ -1,28 +1,46 @@
-name: DeltaSens
-options:
-  bundleIdPrefix: com.delta
-targets:
-  DeltaSens:
-    type: application
-    platform: iOS
-    deploymentTarget: "16.0"
-    sources: [DeltaSens]
-    info:
-      path: DeltaSens/Info.plist
-      properties:
-        CFBundleDisplayName: 灵敏度助手
-        CFBundleShortVersionString: "1.0.0"
-        CFBundleVersion: "1"
-        UILaunchScreen: {}
-        UISupportedInterfaceOrientations:
-          - UIInterfaceOrientationPortrait
-          - UIInterfaceOrientationLandscapeLeft
-          - UIInterfaceOrientationLandscapeRight
-        NSMotionUsageDescription: 需要访问陀螺仪以进行灵敏度测试
-    settings:
-      base:
-        SWIFT_VERSION: "5.0"
-        TARGETED_DEVICE_FAMILY: "1,2"
-        CODE_SIGNING_REQUIRED: NO
-        CODE_SIGN_IDENTITY: ""
-        CODE_SIGNING_ALLOWED: NO
+name: Build iOS IPA
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: sudo xcode-select -s /Applications/Xcode_15.4.app
+
+      - name: Install XcodeGen
+        run: brew install xcodegen
+
+      - name: Generate Xcode project
+        run: xcodegen
+
+      - name: Build
+        run: |
+          xcodebuild \
+            -project DeltaSens.xcodeproj \
+            -scheme DeltaSens \
+            -configuration Release \
+            -sdk iphoneos \
+            -derived-path build \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            build
+
+      - name: Package IPA
+        run: |
+          mkdir -p Payload
+          cp -r build/Build/Products/Release-iphoneos/DeltaSens.app Payload/
+          zip -r DeltaSens.ipa Payload
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: DeltaSens-ipa
+          path: DeltaSens.ipa
+
