@@ -16,16 +16,15 @@ jobs:
         run: xcodegen
       - name: Build
         run: |
-          PROJECT=$(ls -d *.xcodeproj | head -1)
-          xcodebuild -project "$PROJECT" -scheme DeltaSens -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
+          xcodebuild -project DeltaSens.xcodeproj -scheme DeltaSens -configuration Release -sdk iphoneos -derivedDataPath build CODE_SIGNING_ALLOWED=NO CODE_SIGNING_REQUIRED=NO build
       - name: Package IPA
         run: |
-          APP_PATH=$(find build/Build/Products/Release-iphoneos -name "*.app" | head -1)
           mkdir -p Payload
-          cp -r "$APP_PATH" Payload/
+          cp -r build/Build/Products/Release-iphoneos/DeltaSens.app Payload/
           zip -r DeltaSens.ipa Payload
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
           name: DeltaSens-ipa
           path: DeltaSens.ipa
+          
