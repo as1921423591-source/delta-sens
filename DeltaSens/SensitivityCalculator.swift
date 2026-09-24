@@ -101,8 +101,15 @@ struct SensitivityCalculator {
             if gyro.horizontalOffset > 50 {
                 gTotal -= 20
                 gFire -= 15
+                gHoriz -= 10
             } else if gyro.horizontalOffset < 20 && gyro.accuracy > 60 {
                 gTotal += 15
+            }
+            if gyro.verticalOffset > 40 {
+                gVert -= 15
+                gFireVert -= 10
+            } else if gyro.verticalOffset < 15 && gyro.accuracy > 60 {
+                gVert += 10
             }
         }
 
@@ -187,7 +194,10 @@ struct SensitivityCalculator {
             t.append("追踪精度只有 \(Int(track.accuracy))%，跟枪还需练习。灵敏度已调低方便稳准星。")
         }
         if gyro.done && mode != .hand && gyro.horizontalOffset > 50 {
-            t.append("陀螺仪水平偏移 \(Int(gyro.horizontalOffset))px，晃手机幅度太大，已降低陀螺仪灵敏度。")
+            t.append("陀螺仪水平偏移 \(Int(gyro.horizontalOffset))px，晃手机幅度太大，已降低陀螺仪水平灵敏度。")
+        }
+        if gyro.done && mode != .hand && gyro.verticalOffset > 40 {
+            t.append("陀螺仪垂直偏移 \(Int(gyro.verticalOffset))px，俯仰抖得多，已降低陀螺仪垂直灵敏度。压枪时别猛低头。")
         }
         if mode == .handGyro {
             t.append("⚠️ 主手副陀：大幅拉枪用手搓，小幅修正用陀螺仪，两个不要同时猛动。")

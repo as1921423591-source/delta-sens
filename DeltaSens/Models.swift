@@ -58,6 +58,7 @@ struct GyroTestResult {
     var done: Bool = false
     var accuracy: Double = 0
     var horizontalOffset: Double = 0
+    var verticalOffset: Double = 0
 }
 
 // MARK: - 灵敏度输出
